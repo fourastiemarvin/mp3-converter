@@ -1,4 +1,5 @@
 import sys
+from helper import execute_command
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QWidget, QVBoxLayout,
     QLineEdit, QListWidget, QPushButton, QLabel
@@ -39,7 +40,11 @@ class MainWindow(QMainWindow):
       central_widget.setLayout(main_layout)
 
    def convert(self):
-      pass
+      link_elements = [self.link_list.item(i).text() for i in range(self.link_list.count())]
+      for link in link_elements:
+         execute_command(f"yt-dlp -x --audio-format 'mp3' {link.text()}")
+         self.link_list.takeItem(0)
+         self.message_label.setText(f"{len(link_elements) - self.link_list.count()} fichiers ont été convertis en MP3.")
 
    def add_link_to_list(self):
       link = self.link_input.text().strip()
